@@ -1,0 +1,40 @@
+version: "3.9"
+
+services:
+  devopsdb:
+    image: vinaikumarp/db-app:1.0
+    ports:
+      - "3306:3306"
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 1500M
+        reservations:
+          cpus: "4"
+          memory: 3000M
+      replicas: 1
+    networks:
+      - mynetwork
+
+  application:
+    image: vinaikumarp/java-app:1.0
+    ports:
+      - "1113:8080"
+    deploy:
+      resources:
+          limits:
+            cpus: "2"
+            memory: 4000M
+          reservations:
+            cpus: "4"
+            memory: 6000M
+      replicas: 3
+    depends_on:
+      - devopsdb
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+    driver: overlay
